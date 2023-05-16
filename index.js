@@ -6,6 +6,7 @@ const formEl = document.querySelector("#form")
 const searchEl = document.querySelector("#search")
 const mainEl = document.querySelector("#main")
 
+
 async function getUser(user){
   const response = await fetch(API_URL+user)
   const data = await response.json()
@@ -52,7 +53,32 @@ createCard("Carlos-S-Rodrigues")
 async function addReposToCard(reposUrl){
   const reposData = await getRepos(reposUrl)
   const reposEl = document.querySelector("#repos")
-  reposEl.innerHTML = "testando"
+ 
 
-  reposData.sort((a,b)=> b.stargazers_count - a.stargazers_count).forEach()
+  const reposSort = reposData.sort((a,b)=> b.stargazers_count - a.stargazers_count);
+
+  const reposSlice = reposSort.slice(0,10);
+
+  reposSlice.forEach(repo =>{
+    const repoEl = document.createElement("a")
+    repoEl.classList.add("repo")
+
+    repoEl.href = repo.html_url
+    repoEl.target = "_blank"
+    repoEl.innerHTML = repo.name
+
+    reposEl.appendChild(repoEl)
+  })
 }
+
+formEl.addEventListener("submit", (event)=> {
+  event.preventDefault()
+
+  const user = searchEl.value
+
+  if(user){
+    createCard(user)
+
+    searchEl.value =""
+  }
+})
